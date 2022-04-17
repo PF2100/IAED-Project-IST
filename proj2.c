@@ -654,12 +654,16 @@ int validateRev(Reserve* linkedList,Reserve* reserve) {
     return NAO_EXISTE;
 }
 
+int cmpDate(Data flightD,Data d) {
+	return (converteDataNum(flightD) == converteDataNum(d));
+}
+
 void listReserves(Reserve* head,int idx) {
     int size = _voos[idx].reservas , i = 0;
     Reserve* cursor = head;
     Reserve** vec = mymalloc(sizeof(Reserve)*size);
     while ( cursor && i < size ) {
-        if ( strcmp(head->code,_voos[idx].id) == 0) {
+        if ( (strcmp(cursor->code,_voos[idx].id) == 0) && cmpDate(_voos[idx].data,cursor->date) ) {
             vec[i] = cursor;
             i++;
         }
