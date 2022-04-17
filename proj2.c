@@ -739,8 +739,57 @@ Reserve* popReserve ( Reserve* head, char* code) {
     return head;
 }
 
+int freeAeroporto(char* code) {
+    int idx , count = 0 , airIdx , j ;
+    for ( idx = 0 , j = 0; idx < _numVoos ; idx++,j++) {
+        if ( strcmp(_voos[idx].id,code) == 0 ) {
+            airIdx=encontraAeroporto(_voos[idx].partida);
+            _aeroportos[airIdx].numVoos--;
+            count += _voos[idx].reservas;
+            j--;
+        }
+        else {
+            _voos[j] = _voos[idx];
+        }
+    }
+    _numVoos = _numVoos - (idx - j);
+    return count;
+}
+
+Reserve* popReserve2 ( Reserve* reserve) {
+    Reserve* aux ;
+    aux  = reserve->next;
+    free(reserve);
+    return aux;
+}
+
+Reserve* popAllReserve(Reserve*head , int size, char* code) {
+    Reserve* cursor = head;
+    Reserve* prev = NULL;
+    while ( cursor && size > 0 ) {
+        if ( strcmp(cursor->code,code) == 0 ) {
+            if ( prev == NULL) {
+                head = popReserve2(cursor);
+                cursor = head;
+                size--;
+            }
+            else {
+                prev->next = popReserve2(cursor);
+                cursor = prev->next;
+                size--;
+            }
+        }
+        else {
+            prev = cursor;
+            cursor = cursor->next;
+        }
+    }
+    return head;
+}
+
 Reserve* freeFlighReserve(Reserve* head) {
     char* code = readString ();
+	int revNum , numVoos = _numVoos;
     if (strlen(code) >= 10) {
         if ( findRevCode(head,code) == FALSE) {
             printf("not found\n");
@@ -749,9 +798,18 @@ Reserve* freeFlighReserve(Reserve* head) {
         }
         head = popReserve(head,code);
     }
+	else {
+        revNum = freeAeroporto(code);
+		if ( numVoos == _numVoos ) {
+            printf("not found\n");
+        }
+        else {
+            head = popAllReserve(head,revNum,code);
+        }
+        free(code);
+	}
     return head;
 }
-
 
 
 
