@@ -1,2 +1,2 @@
 # IAED-Project
-Introduction to Algorithms and Data Structure (IAED) (Grade: 18/20) - IST - 2021/2022
+Introduction to Algorithms and Data Structure (IAED) - IST - 2021/2022
